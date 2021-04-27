@@ -64,6 +64,8 @@ pacman-install xfce4 xfce4-goodies
 xfconf-query -n -t string -c xfce4-panel -p /plugins/plugin-1 -s "whiskermenu"
 xfconf-query -n -t int -c xfce4-panel -p /panels -s 1 -a
 xfconf-query -n -t string -c xfce4-panel -p /panels/panel-1/position -s "p=8;x=0;y=0"
+xfconf-query -n -t int -c xfce4-panel -p /plugins/plugin-14/appearance -s "0"
+xfconf-query -n -t string -c xfce4-panel -p /plugins/plugin-14/items -s "+logout" -a
 fi  # OS_INSTALL_XFCE
 
 
