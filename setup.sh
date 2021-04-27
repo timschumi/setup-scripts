@@ -3,7 +3,7 @@
 OS_INSTALL_LIGHTDM=1
 OS_INSTALL_XFCE=1
 OS_INSTALL_NETWORKMANAGER=1
-OS_THEME="adapta-gtk-theme:Adapta-Nokto-Eta"
+OS_THEME="adapta-gtk-theme:Adapta:Adapta-Nokto-Eta"
 OS_ICONS="papirus-icon-theme:Papirus"
 OS_INSTALL_DOTFILES=1
 OS_DISABLE_COMPOSITING=1
@@ -13,7 +13,8 @@ _OS_NEEDS_XORG="${OS_INSTALL_LIGHTDM}"
 if [ -n "${OS_THEME}" ]; then
 _OS_THEME_SPLIT=(${OS_THEME//:/ })
 _OS_THEME_PACKAGE="${_OS_THEME_SPLIT[0]}"
-_OS_THEME_NAME="${_OS_THEME_SPLIT[1]}"
+_OS_THEME_GROUP="${_OS_THEME_SPLIT[1]}"
+_OS_THEME_NAME="${_OS_THEME_SPLIT[2]}"
 fi  # OS_THEME
 
 if [ -n "${OS_ICONS}" ]; then
@@ -65,7 +66,7 @@ pacman-install "${_OS_THEME_PACKAGE}"
 
 if [ -n "${OS_INSTALL_XFCE}" ]; then
 xfconf-query -n -t string -c xsettings -p /Net/ThemeName -s "${_OS_THEME_NAME}"
-xfconf-query -n -t string -c xfce4-notifyd -p /theme -s "${_OS_THEME_NAME}"
+xfconf-query -n -t string -c xfce4-notifyd -p /theme -s "${_OS_THEME_GROUP}"
 fi  # OS_INSTALL_XFCE
 fi  # OS_THEME
 
