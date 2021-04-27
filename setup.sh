@@ -5,6 +5,7 @@ OS_INSTALL_XFCE=1
 OS_INSTALL_NETWORKMANAGER=1
 OS_THEME="adapta-gtk-theme:Adapta-Nokto-Eta"
 OS_ICONS="papirus-icon-theme:Papirus"
+OS_INSTALL_DOTFILES=1
 
 _OS_NEEDS_XORG="${OS_INSTALL_LIGHTDM}"
 
@@ -72,6 +73,13 @@ if [ -n "${OS_INSTALL_XFCE}" ]; then
 xfconf-query -n -t string -c xsettings -p /Net/IconThemeName -s "${_OS_ICONS_NAME}"
 fi  # OS_INSTALL_XFCE
 fi  # OS_ICONS
+
+
+if [ -n "${OS_INSTALL_DOTFILES}" ] && [ ! -d "$HOME/.dotfiles" ]; then
+>&2 echo "--- Installing dotfiles ---"
+git clone https://github.com/timschumi/dotfiles "$HOME/.dotfiles"
+~/.dotfiles/setup.sh
+fi  # OS_INSTALL_DOTFILES
 
 
 >&2 echo "--- Enabling sudo password requirement ---"
