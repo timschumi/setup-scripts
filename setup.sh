@@ -50,6 +50,10 @@ fi  # OS_INSTALL_LIGHTDM
 if [ -n "${OS_INSTALL_XFCE}" ]; then
 >&2 echo "--- Installing XFCE ---"
 pacman-install xfce4 xfce4-goodies
+
+xfconf-query -n -t string -c xfce4-panel -p /plugins/plugin-1 -s "whiskermenu"
+xfconf-query -n -t int -c xfce4-panel -p /panels -s 1 -a
+xfconf-query -n -t string -c xfce4-panel -p /panels/panel-1/position -s "p=8;x=0;y=0"
 fi  # OS_INSTALL_XFCE
 
 
