@@ -22,6 +22,10 @@ _OS_ICONS_PACKAGE="${_OS_ICONS_SPLIT[0]}"
 _OS_ICONS_NAME="${_OS_ICONS_SPLIT[1]}"
 fi  # OS_ICONS
 
+pacman-install() {
+    sudo pacman -S "$@" --noconfirm --needed --noprogressbar --quiet
+}
+
 >&2 echo "--- Disabling sudo password requirement ---"
 echo "%wheel ALL=(ALL) NOPASSWD: ALL" | sudo tee /etc/sudoers.d/15-nopasswd
 
@@ -31,33 +35,33 @@ sudo pacman -Syyuu --noconfirm
 
 if [ -n "${_OS_NEEDS_XORG}" ]; then
 >&2 echo "--- Installing Xorg ---"
-sudo pacman -S xorg --noconfirm
+pacman-install xorg
 fi  # _OS_NEEDS_XORG
 
 
 if [ -n "${OS_INSTALL_LIGHTDM}" ]; then
 >&2 echo "--- Installing lightdm ---"
-sudo pacman -S lightdm lightdm-gtk-greeter lightdm-gtk-greeter-settings --noconfirm
+pacman-install lightdm lightdm-gtk-greeter lightdm-gtk-greeter-settings
 sudo systemctl enable lightdm
 fi  # OS_INSTALL_LIGHTDM
 
 
 if [ -n "${OS_INSTALL_XFCE}" ]; then
 >&2 echo "--- Installing XFCE ---"
-sudo pacman -S xfce4 xfce4-goodies --noconfirm
+pacman-install xfce4 xfce4-goodies
 fi  # OS_INSTALL_XFCE
 
 
 if [ -n "${OS_INSTALL_NETWORKMANAGER}" ]; then
 >&2 echo "--- Installing NetworkManager ---"
-sudo pacman -S networkmanager network-manager-applet --noconfirm
+pacman-install networkmanager network-manager-applet
 sudo systemctl enable NetworkManager
 fi  # OS_INSTALL_NETWORKMANAGER
 
 
 if [ -n "${OS_THEME}" ]; then
 >&2 echo "--- Installing Theme ---"
-sudo pacman -S "${_OS_THEME_PACKAGE}" --noconfirm
+pacman-install "${_OS_THEME_PACKAGE}"
 
 if [ -n "${OS_INSTALL_XFCE}" ]; then
 xfconf-query -n -t string -c xsettings -p /Net/ThemeName -s "${_OS_THEME_NAME}"
@@ -68,7 +72,7 @@ fi  # OS_THEME
 
 if [ -n "${OS_ICONS}" ]; then
 >&2 echo "--- Installing Icons ---"
-sudo pacman -S "${_OS_ICONS_PACKAGE}" --noconfirm
+pacman-install "${_OS_ICONS_PACKAGE}"
 
 if [ -n "${OS_INSTALL_XFCE}" ]; then
 xfconf-query -n -t string -c xsettings -p /Net/IconThemeName -s "${_OS_ICONS_NAME}"
