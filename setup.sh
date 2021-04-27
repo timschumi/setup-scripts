@@ -6,6 +6,7 @@ OS_INSTALL_NETWORKMANAGER=1
 OS_THEME="adapta-gtk-theme:Adapta-Nokto-Eta"
 OS_ICONS="papirus-icon-theme:Papirus"
 OS_INSTALL_DOTFILES=1
+OS_DISABLE_COMPOSITING=1
 
 _OS_NEEDS_XORG="${OS_INSTALL_LIGHTDM}"
 
@@ -80,6 +81,17 @@ if [ -n "${OS_INSTALL_DOTFILES}" ] && [ ! -d "$HOME/.dotfiles" ]; then
 git clone https://github.com/timschumi/dotfiles "$HOME/.dotfiles"
 ~/.dotfiles/setup.sh
 fi  # OS_INSTALL_DOTFILES
+
+
+if [ -n "${OS_DISABLE_COMPOSITING}" ]; then
+>&2 echo "--- Disabling Compositing ---"
+
+if [ -n "${OS_INSTALL_XFCE}" ]; then
+xfconf-query -n -t bool -c xfwm4 -p /general/sync_to_vblank -s "false"
+xfconf-query -n -t string -c xfwm4 -p /general/vblank_mode -s "off"
+xfconf-query -n -t bool -c xfwm4 -p /general/use_compositing -s "false"
+fi  # OS_INSTALL_XFCE
+fi  # OS_DISABLE_COMPOSITING
 
 
 >&2 echo "--- Enabling sudo password requirement ---"
