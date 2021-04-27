@@ -58,8 +58,8 @@ if [ -n "${OS_THEME}" ]; then
 sudo pacman -S "${_OS_THEME_PACKAGE}" --noconfirm
 
 if [ -n "${OS_INSTALL_XFCE}" ]; then
-xfconf-query -c xsettings -p /Net/ThemeName -s "${_OS_THEME_NAME}"
-xfconf-query -c xfce4-notifyd -p /theme -s "${_OS_THEME_NAME}"
+xfconf-query -n -t string -c xsettings -p /Net/ThemeName -s "${_OS_THEME_NAME}"
+xfconf-query -n -t string -c xfce4-notifyd -p /theme -s "${_OS_THEME_NAME}"
 fi  # OS_INSTALL_XFCE
 fi  # OS_THEME
 
@@ -69,7 +69,7 @@ if [ -n "${OS_ICONS}" ]; then
 sudo pacman -S "${_OS_ICONS_PACKAGE}" --noconfirm
 
 if [ -n "${OS_INSTALL_XFCE}" ]; then
-xfconf-query -c xsettings -p /Net/IconThemeName -s "${_OS_ICONS_NAME}"
+xfconf-query -n -t string -c xsettings -p /Net/IconThemeName -s "${_OS_ICONS_NAME}"
 fi  # OS_INSTALL_XFCE
 fi  # OS_ICONS
 
