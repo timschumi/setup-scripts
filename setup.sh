@@ -3,12 +3,14 @@
 OS_INSTALL_LIGHTDM=1
 OS_INSTALL_XFCE=1
 OS_INSTALL_NETWORKMANAGER=1
+OS_INSTALL_PIPEWIRE=1
 OS_THEME="adapta-gtk-theme:Adapta:Adapta-Nokto-Eta"
 OS_ICONS="papirus-icon-theme:Papirus"
 OS_INSTALL_DOTFILES=1
 OS_DISABLE_COMPOSITING=1
 
 _OS_NEEDS_XORG="${OS_INSTALL_LIGHTDM}"
+_OS_NEEDS_PULSEAUDIO="${OS_INSTALL_XORG}"
 
 if [ -n "${OS_THEME}" ]; then
 _OS_THEME_SPLIT=(${OS_THEME//:/ })
@@ -38,6 +40,14 @@ if [ -n "${_OS_NEEDS_XORG}" ]; then
 >&2 echo "--- Installing Xorg ---"
 pacman-install xorg
 fi  # _OS_NEEDS_XORG
+
+
+if [ -n "${OS_INSTALL_PIPEWIRE}" ]; then
+>&2 echo "--- Installing PipeWire ---"
+pacman-install pipewire pipewire-pulse
+elif [ -n "${_OS_WANTS_PULSEAUDIO}" ]; then
+pacman-install pulseaudio
+fi  # OS_INSTALL_PIPEWIRE
 
 
 if [ -n "${OS_INSTALL_LIGHTDM}" ]; then
