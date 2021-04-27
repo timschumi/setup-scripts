@@ -66,6 +66,11 @@ xfconf-query -n -t int -c xfce4-panel -p /panels -s 1 -a
 xfconf-query -n -t string -c xfce4-panel -p /panels/panel-1/position -s "p=8;x=0;y=0"
 xfconf-query -n -t int -c xfce4-panel -p /plugins/plugin-14/appearance -s "0"
 xfconf-query -n -t string -c xfce4-panel -p /plugins/plugin-14/items -s "+logout" -a
+
+xfconf-query -n -t bool -c xfce4-desktop -p /desktop-icons/file-icons/show-filesystem -s "false"
+xfconf-query -n -t bool -c xfce4-desktop -p /desktop-icons/file-icons/show-home -s "false"
+xfconf-query -n -t bool -c xfce4-desktop -p /desktop-icons/file-icons/show-removable -s "false"
+xfconf-query -n -t bool -c xfce4-desktop -p /desktop-icons/file-icons/show-trash -s "false"
 fi  # OS_INSTALL_XFCE
 
 
