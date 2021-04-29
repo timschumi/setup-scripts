@@ -53,16 +53,16 @@ fi
 sudo pacman -Syyuu --noconfirm
 
 
-if [[ "${OS_INSTALL_MICROCODE}" =~ "(intel|amd)" ]]; then
+if [[ "${OS_INSTALL_MICROCODE}" =~ intel|amd ]]; then
 >&2 echo "--- Installing ${OS_INSTALL_MICROCODE} microcode ---"
 pacman-install "${OS_INSTALL_MICROCODE}-ucode"
-_OS_CURRENT_BOOT_CONFIG=$(cat /sys/firmware/efi/efivars/LoaderEntrySelected-4a67b082-0a4c-41cf-b6c7-440b29bb8c4f)
+_OS_CURRENT_BOOT_CONFIG=$(tr -d '\0\006' < /sys/firmware/efi/efivars/LoaderEntrySelected-4a67b082-0a4c-41cf-b6c7-440b29bb8c4f)
 _OS_CURRENT_BOOT_FILE="/boot/loader/entries/${_OS_CURRENT_BOOT_CONFIG}"
 if ! grep -q "ucode" "${_OS_CURRENT_BOOT_FILE}"; then
-    sudo sed -i "^linux/!b;n;cinitrd /${OS_INSTALL_MICROCODE}-ucode.img"
+    sudo sed -i "/^linux.*/a initrd /${OS_INSTALL_MICROCODE}-ucode.img" "${_OS_CURRENT_BOOT_FILE}"
 fi
 elif [ -n "${OS_INSTALL_MICROCODE}" ]; then
-&>2 echo "error: Unknown selection for OS_INSTALL_MICROCODE: '${OS_INSTALL_MICROCODE}'"
+>&2 echo "error: Unknown selection for OS_INSTALL_MICROCODE: '${OS_INSTALL_MICROCODE}'"
 exit 1
 fi  # OS_INSTALL_MICROCODE
 
