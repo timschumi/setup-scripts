@@ -7,6 +7,7 @@ OS_INSTALL_PIPEWIRE=1
 OS_INSTALL_PULSEAUDIO=0
 OS_THEME="adapta-gtk-theme:Adapta:Adapta-Nokto-Eta"
 OS_ICONS="papirus-icon-theme:Papirus"
+OS_KEYBOARD_LAYOUT="de-latin1-nodeadkeys"
 OS_INSTALL_DOTFILES=1
 OS_DISABLE_COMPOSITING=1
 
@@ -71,6 +72,8 @@ xfconf-query -n -t bool -c xfce4-desktop -p /desktop-icons/file-icons/show-files
 xfconf-query -n -t bool -c xfce4-desktop -p /desktop-icons/file-icons/show-home -s "false"
 xfconf-query -n -t bool -c xfce4-desktop -p /desktop-icons/file-icons/show-removable -s "false"
 xfconf-query -n -t bool -c xfce4-desktop -p /desktop-icons/file-icons/show-trash -s "false"
+
+xfconf-query -n -t bool -c keyboard-layout -p /Default/XkbDisable -s "true"
 fi  # OS_INSTALL_XFCE
 
 
@@ -118,6 +121,13 @@ xfconf-query -n -t string -c xfwm4 -p /general/vblank_mode -s "off"
 xfconf-query -n -t bool -c xfwm4 -p /general/use_compositing -s "false"
 fi  # OS_INSTALL_XFCE
 fi  # OS_DISABLE_COMPOSITING
+
+
+if [ -n "${OS_KEYBOARD_LAYOUT}" ]; then
+>&2 echo "--- Setting keyboard layout ---"
+
+sudo localectl set-keymap "${OS_KEYBOARD_LAYOUT}"
+fi
 
 
 >&2 echo "--- Enabling sudo password requirement ---"
