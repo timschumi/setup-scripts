@@ -135,7 +135,7 @@ fi  # OS_DISABLE_COMPOSITING
 if [ -n "${OS_KEYBOARD_LAYOUT}" ]; then
 >&2 echo "--- Setting keyboard layout ---"
 
-sudo localectl set-keymap "${OS_KEYBOARD_LAYOUT}"
+sudo localectl set-keymap "${OS_KEYBOARD_LAYOUT}" "${OS_KEYBOARD_LAYOUT}"
 fi
 
 
