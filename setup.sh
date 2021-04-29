@@ -5,6 +5,7 @@ OS_INSTALL_XFCE=1
 OS_INSTALL_NETWORKMANAGER=1
 OS_INSTALL_PIPEWIRE=1
 OS_INSTALL_PULSEAUDIO=0
+OS_INSTALL_MICROCODE=""
 OS_ENABLE_MULTILIB=1
 OS_THEME="adapta-gtk-theme:Adapta:Adapta-Nokto-Eta"
 OS_ICONS="papirus-icon-theme:Papirus"
@@ -44,6 +45,20 @@ fi
 
 >&2 echo "--- Updating system ---"
 sudo pacman -Syyuu --noconfirm
+
+
+if [[ "${OS_INSTALL_MICROCODE}" ~= "(intel|amd)" ]]; then
+&>2 echo "--- Installing ${OS_INSTALL_MICROCODE} microcode ---"
+pacman-install "${OS_INSTALL_MICROCODE}-ucode"
+_OS_CURRENT_BOOT_CONFIG=$(cat /sys/firmware/efi/efivars/LoaderEntrySelected-4a67b082-0a4c-41cf-b6c7-440b29bb8c4f)
+_OS_CURRENT_BOOT_FILE="/boot/loader/entries/${_OS_CURRENT_BOOT_CONFIG}"
+if ! grep -q "ucode" "${_OS_CURRENT_BOOT_FILE}"; then
+    sudo sed -i "^linux/!b;n;cinitrd /${OS_INSTALL_MICROCODE}-ucode.img"
+fi
+else [ -n "${OS_INSTALL_MICROCODE}" ]; then
+&>2 echo "error: Unknown selection for OS_INSTALL_MICROCODE: '${OS_INSTALL_MICROCODE}'"
+exit 1
+fi  # OS_INSTALL_MICROCODE
 
 
 if [ -n "${_OS_NEEDS_XORG}" ]; then
