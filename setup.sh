@@ -9,6 +9,7 @@ OS_INSTALL_MICROCODE=""
 OS_ENABLE_MULTILIB=1
 OS_THEME="adapta-gtk-theme:Adapta:Adapta-Nokto-Eta"
 OS_ICONS="papirus-icon-theme:Papirus"
+OS_FONT="noto-fonts:Noto Sans 10"
 OS_KEYBOARD_LAYOUT="de-latin1-nodeadkeys"
 OS_INSTALL_DOTFILES=1
 OS_DISABLE_COMPOSITING=1
@@ -27,6 +28,11 @@ _OS_ICONS_SPLIT=(${OS_ICONS//:/ })
 _OS_ICONS_PACKAGE="${_OS_ICONS_SPLIT[0]}"
 _OS_ICONS_NAME="${_OS_ICONS_SPLIT[1]}"
 fi  # OS_ICONS
+
+if [ -n "${OS_FONT}" ]; then
+IFS=':' read -r _OS_FONT_PACKAGE _OS_FONT_NAME <<< "${OS_FONT}"
+fi  # OS_FONT
+
 
 pacman-install() {
     sudo pacman -S "$@" --noconfirm --needed --noprogressbar --quiet
@@ -127,6 +133,16 @@ if [ -n "${OS_INSTALL_XFCE}" ]; then
 xfconf-query -n -t string -c xsettings -p /Net/IconThemeName -s "${_OS_ICONS_NAME}"
 fi  # OS_INSTALL_XFCE
 fi  # OS_ICONS
+
+
+if [ -n "${OS_FONT}" ]; then
+>&2 echo "--- Installing font ---"
+pacman-install "${_OS_FONT_PACKAGE}"
+
+if [ -n "${OS_INSTALL_XFCE}" ]; then
+xfconf-query -n -t string -c xsettings -p /Gtk/FontName -s "${_OS_FONT_NAME}"
+fi  # OS_INSTALL_XFCE
+fi  # OS_FONT
 
 
 if [ -n "${OS_INSTALL_DOTFILES}" ] && [ ! -d "$HOME/.dotfiles" ]; then
