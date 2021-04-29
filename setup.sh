@@ -5,6 +5,7 @@ OS_INSTALL_XFCE=1
 OS_INSTALL_NETWORKMANAGER=1
 OS_INSTALL_PIPEWIRE=1
 OS_INSTALL_PULSEAUDIO=0
+OS_ENABLE_MULTILIB=1
 OS_THEME="adapta-gtk-theme:Adapta:Adapta-Nokto-Eta"
 OS_ICONS="papirus-icon-theme:Papirus"
 OS_KEYBOARD_LAYOUT="de-latin1-nodeadkeys"
@@ -32,6 +33,14 @@ pacman-install() {
 
 >&2 echo "--- Disabling sudo password requirement ---"
 echo "%wheel ALL=(ALL) NOPASSWD: ALL" | sudo tee /etc/sudoers.d/15-nopasswd
+
+
+if [ -n "${OS_ENABLE_MULTILIB}" ]; then
+>&2 echo "--- Enabling multilib ---"
+sudo sed -i 's/^#\[multilib\]/[multilib]/' /etc/pacman.conf
+sudo sed -i '/^\[multilib\]/!b;n;cInclude = /etc/pacman.d/mirrorlist' /etc/pacman.conf
+fi
+
 
 >&2 echo "--- Updating system ---"
 sudo pacman -Syyuu --noconfirm
