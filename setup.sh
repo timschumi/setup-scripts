@@ -7,6 +7,11 @@ OS_INSTALL_PIPEWIRE=1
 OS_INSTALL_PULSEAUDIO=
 OS_INSTALL_MICROCODE=""
 OS_INSTALL_CUPS=1
+OS_INSTALL_LIBVIRT=1
+OS_INSTALL_VIRTUALBOX=
+OS_INSTALL_VAGRANT=1
+OS_INSTALL_PODMAN=1
+OS_INSTALL_DOCKER=
 OS_ENABLE_MULTILIB=1
 OS_THEME="adapta-gtk-theme:Adapta:Adapta-Nokto-Eta"
 OS_ICONS="papirus-icon-theme:Papirus"
@@ -252,6 +257,67 @@ sudo tee /etc/tmpfiles.d/media.conf << 'EOF' > /dev/null
 D /media 0755 root root 0 -
 EOF
 fi  # OS_ENABLE_GLOBAL_MEDIA
+
+
+if [ -n "${OS_INSTALL_LIBVIRT}" ]; then
+>&2 echo "--- Setting up libvirt ---"
+pacman-install \
+    libvirt \
+    qemu \
+    qemu-arch-extra \
+    iptables-nft \
+    dnsmasq \
+    bridge-utils \
+    openbsd-netcat \
+    virt-manager \
+
+sudo usermod -aG libvirt $USER
+sudo systemctl enable libvirtd
+
+sudo sed -i '/^hosts:/ s/files /files libvirt libvirt_guest/' /etc/nsswitch.conf
+
+if [ ! -f "/usr/libexec/qemu-kvm" ]; then
+    sudo mkdir -p /usr/libexec
+    sudo tee /usr/libexec/qemu-kvm << 'EOF' > /dev/null
+#!/bin/bash
+
+qemu-system-x86_64 -enable-kvm "$@"
+EOF
+    sudo chmod a+x /usr/libexec/qemu-kvm
+fi  # OS_INSTALL_LIBVIRT
+
+
+if [ -n "${OS_INSTALL_VIRTUALBOX}" ]; then
+>&2 echo "--- Installing VirtualBox ---"
+pacman-install virtualbox virtualbox-host-dkms
+fi  # OS_INSTALL_VIRTUALBOX
+
+
+if [ -n "${OS_INSTALL_VAGRANT}" ]; then
+>&2 echo "--- Installing Vagrant ---"
+pacman-install vagrant packer
+
+sudo tee /etc/security/limits.d/15-nofile.conf << 'EOF' > /dev/null
+* hard nofile 524288
+* soft nofile 524288
+EOF
+fi  # OS_INSTALL_VAGRANT
+
+
+if [ -n "${OS_INSTALL_PODMAN}" ]; then
+>&2 echo "--- Installing podman ---"
+pacman-install podman buildah podman-compose
+
+echo "$USER:10000:65535" | sudo tee -a /etc/subuid
+echo "$USER:10000:65535" | sudo tee -a /etc/subgid
+fi  # OS_INSTALL_PODMAN
+
+
+if [ -n "${OS_INSTALL_DOCKER}" ]; then
+>&2 echo "--- Installing docker ---"
+pacman-install docker docker-compose
+sudo usermod -aG docker $USER
+fi  # OS_INSTALL_DOCKER
 
 
 >&2 echo "--- Enabling sudo password requirement ---"
