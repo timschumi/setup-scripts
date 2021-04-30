@@ -6,6 +6,7 @@ OS_INSTALL_NETWORKMANAGER=1
 OS_INSTALL_PIPEWIRE=1
 OS_INSTALL_PULSEAUDIO=
 OS_INSTALL_MICROCODE=""
+OS_INSTALL_CUPS=1
 OS_ENABLE_MULTILIB=1
 OS_THEME="adapta-gtk-theme:Adapta:Adapta-Nokto-Eta"
 OS_ICONS="papirus-icon-theme:Papirus"
@@ -172,6 +173,23 @@ if [ -n "${OS_KEYBOARD_LAYOUT}" ]; then
 >&2 echo "--- Setting keyboard layout ---"
 
 sudo localectl set-keymap "${OS_KEYBOARD_LAYOUT}" "${OS_KEYBOARD_LAYOUT}"
+fi
+
+
+if [ -n "${OS_INSTALL_CUPS}" ]; then
+>&2 echo "--- Installing CUPS ---"
+pacman-install cups cups-pdf cups-pk-helper
+
+sudo systemctl enable org.cups.cupsd.service
+
+sudo tee /etc/polkit-1/rules.d/49-allow-passwordless-printer-admin.rules << 'EOF' > /dev/null
+polkit.addRule(function(action, subject) {
+    if (action.id == "org.opensuse.cupspkhelper.mechanism.all-edit" &&
+        subject.isInGroup("wheel")){
+        return polkit.Result.YES;
+    }
+});
+EOF
 fi
 
 
