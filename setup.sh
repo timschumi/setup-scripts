@@ -22,6 +22,7 @@ OS_DISABLE_COMPOSITING=1
 OS_ENABLE_LOWLATENCY_AUDIO=1
 OS_ENABLE_GLOBAL_MEDIA=1
 OS_ENABLE_POON_REPO=1
+OS_DISABLE_AUDIT=1
 
 _OS_NEEDS_XORG="${OS_INSTALL_LIGHTDM}"
 
@@ -319,6 +320,15 @@ if [ -n "${OS_INSTALL_DOCKER}" ]; then
 pacman-install docker docker-compose
 sudo usermod -aG docker $USER
 fi  # OS_INSTALL_DOCKER
+
+
+if [ -n "${OS_DISABLE_AUDIT}" ]; then
+_OS_CURRENT_BOOT_CONFIG=$(tr -d '\0\006' < /sys/firmware/efi/efivars/LoaderEntrySelected-4a67b082-0a4c-41cf-b6c7-440b29bb8c4f)
+_OS_CURRENT_BOOT_FILE="/boot/loader/entries/${_OS_CURRENT_BOOT_CONFIG}"
+if ! grep -q "audit" "${_OS_CURRENT_BOOT_FILE}"; then
+    sudo sed -i "/^options.*/ s/$/ audit=0/" "${_OS_CURRENT_BOOT_FILE}"
+fi
+fi  # OS_DISABLE_AUDIT
 
 
 >&2 echo "--- Enabling sudo password requirement ---"
