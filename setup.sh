@@ -14,6 +14,7 @@ OS_FONT="noto-fonts:Noto Sans 10"
 OS_KEYBOARD_LAYOUT="de-latin1-nodeadkeys"
 OS_INSTALL_DOTFILES=1
 OS_DISABLE_COMPOSITING=1
+OS_ENABLE_LOWLATENCY_AUDIO=1
 
 _OS_NEEDS_XORG="${OS_INSTALL_LIGHTDM}"
 
@@ -191,6 +192,37 @@ polkit.addRule(function(action, subject) {
 });
 EOF
 fi
+
+
+# TODO: PipeWire
+if [ -n "${OS_ENABLE_LOWLATENCY_AUDIO}" ]; then
+>&2 echo "--- Enabling low-latency audio ---"
+
+sudo usermod -aG audio $USER
+
+sudo tee /etc/security/limits.d/15-audio.conf << 'EOF' > /dev/null
+@audio - nice -20
+@audio - rtprio 99
+EOF
+
+if [ -n "${OS_INSTALL_PULSEAUDIO}" ]; then
+sudo mkdir -p /etc/pulse/daemon.conf.d
+sudo tee /etc/pulse/daemon.conf.d/10-better-latency.conf << 'EOF' > /dev/null
+high-priority = yes
+nice-level = -15
+
+realtime-scheduling = yes
+realtime-priority = 50
+
+resample-method = speex-float-0
+
+default-fragments = 2
+default-fragment-size-msec = 2
+EOF
+
+sudo sed -i '/load-module module-udev-detect/ s/$/ tsched=0/' /etc/pulse/default.pa
+fi  # OS_INSTALL_PULSEAUDIO
+fi  # OS_ENABLE_LOWLATENCY_AUDIO
 
 
 >&2 echo "--- Enabling sudo password requirement ---"
