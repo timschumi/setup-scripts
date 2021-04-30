@@ -93,6 +93,10 @@ if [ -n "${OS_INSTALL_XFCE}" ]; then
 >&2 echo "--- Installing XFCE ---"
 pacman-install xfce4 xfce4-goodies
 
+# Generate XFCE files
+bash -c 'sleep 5 && xfce4-session-logout --logout' &
+startx /usr/bin/startxfce4
+
 xfconf-query -n -t string -c xfce4-panel -p /plugins/plugin-1 -s "whiskermenu"
 xfconf-query -n -t int -c xfce4-panel -p /panels -s 1 -a
 xfconf-query -n -t string -c xfce4-panel -p /panels/panel-1/position -s "p=8;x=0;y=0"
