@@ -15,6 +15,7 @@ OS_KEYBOARD_LAYOUT="de-latin1-nodeadkeys"
 OS_INSTALL_DOTFILES=1
 OS_DISABLE_COMPOSITING=1
 OS_ENABLE_LOWLATENCY_AUDIO=1
+OS_ENABLE_GLOBAL_MEDIA=1
 
 _OS_NEEDS_XORG="${OS_INSTALL_LIGHTDM}"
 
@@ -223,6 +224,23 @@ EOF
 sudo sed -i '/load-module module-udev-detect/ s/$/ tsched=0/' /etc/pulse/default.pa
 fi  # OS_INSTALL_PULSEAUDIO
 fi  # OS_ENABLE_LOWLATENCY_AUDIO
+
+
+if [ -n "${OS_ENABLE_GLOBAL_MEDIA}" ]; then
+>&2 echo "--- Mount disks to /media ---"
+
+sudo tee /etc/udev/rules.d/99-udisks2.rules << 'EOF' > /dev/null
+# UDISKS_FILESYSTEM_SHARED
+# ==1: mount filesystem to a shared directory (/media/VolumeName)
+# ==0: mount filesystem to a private directory (/run/media/$USER/VolumeName)
+# See udisks(8)
+ENV{ID_FS_USAGE}=="filesystem|other|crypto", ENV{UDISKS_FILESYSTEM_SHARED}="1"
+EOF
+
+sudo tee /etc/tmpfiles.d/media.conf << 'EOF' > /dev/null
+D /media 0755 root root 0 -
+EOF
+fi  # OS_ENABLE_GLOBAL_MEDIA
 
 
 >&2 echo "--- Enabling sudo password requirement ---"
