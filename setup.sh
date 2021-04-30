@@ -272,7 +272,8 @@ pacman-install \
     virt-manager \
 
 sudo usermod -aG libvirt $USER
-sudo systemctl enable libvirtd
+sudo systemctl enable libvirtd --now
+sudo virsh net-autostart default
 
 sudo sed -i '/^hosts:/ s/files /files libvirt libvirt_guest/' /etc/nsswitch.conf
 
