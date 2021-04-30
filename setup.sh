@@ -16,6 +16,7 @@ OS_INSTALL_DOTFILES=1
 OS_DISABLE_COMPOSITING=1
 OS_ENABLE_LOWLATENCY_AUDIO=1
 OS_ENABLE_GLOBAL_MEDIA=1
+OS_ENABLE_POON_REPO=1
 
 _OS_NEEDS_XORG="${OS_INSTALL_LIGHTDM}"
 
@@ -51,6 +52,16 @@ sudo sed -i 's/^#\[multilib\]/[multilib]/' /etc/pacman.conf
 sudo sed -i '/^\[multilib\]/!b;n;cInclude = /etc/pacman.d/mirrorlist' /etc/pacman.conf
 fi
 
+if [ -n "${OS_ENABLE_POON_REPO}" ]; then
+>&2 echo "--- Add ThePooN's repo ---"
+sudo pacman-key --keyserver hkp://hkps.pool.sks-keyservers.net -r C0E7D0CDB72FBE95
+sudo pacman-key --keyserver hkp://hkps.pool.sks-keyservers.net --lsign-key C0E7D0CDB72FBE95
+sudo tee -a /etc/pacman.conf << 'EOF' > /dev/null
+[thepoon]
+Server = https://archrepo.thepoon.fr
+Server = https://mirrors.celianvdb.fr/archlinux/thepoon
+EOF
+fi  # OS_ENABLE_POON_REPO
 
 >&2 echo "--- Updating system ---"
 sudo pacman -Syyuu --noconfirm
