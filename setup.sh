@@ -23,6 +23,7 @@ OS_ENABLE_LOWLATENCY_AUDIO=1
 OS_ENABLE_GLOBAL_MEDIA=1
 OS_ENABLE_POON_REPO=1
 OS_DISABLE_AUDIT=1
+OS_SYSTEMD_RESOLVED=1
 
 _OS_NEEDS_XORG="${OS_INSTALL_LIGHTDM}"
 
@@ -50,6 +51,15 @@ pacman-install() {
 
 >&2 echo "--- Disabling sudo password requirement ---"
 echo "%wheel ALL=(ALL) NOPASSWD: ALL" | sudo tee /etc/sudoers.d/15-nopasswd
+
+
+if [ -n "${OS_SYSTEMD_RESOLVED}" ]; then
+>&2 echo "--- Set up systemd-resolved ---"
+
+sudo ln -sf /run/systemd/resolve/stub-resolv.conf /etc/resolv.conf
+sudo systemctl enable systemd-resolved --now
+sudo systemctl restart systemd-resolved
+fi  # OS_SYSTEMD_RESOLVED
 
 
 if [ -n "${OS_ENABLE_MULTILIB}" ]; then
