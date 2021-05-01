@@ -199,7 +199,7 @@ if [ -n "${OS_INSTALL_CUPS}" ]; then
 >&2 echo "--- Installing CUPS ---"
 pacman-install cups cups-pdf cups-pk-helper
 
-sudo systemctl enable org.cups.cupsd.service
+sudo systemctl enable cups.service
 
 sudo tee /etc/polkit-1/rules.d/49-allow-passwordless-printer-admin.rules << 'EOF' > /dev/null
 polkit.addRule(function(action, subject) {
