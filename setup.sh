@@ -12,6 +12,7 @@ OS_INSTALL_VIRTUALBOX=
 OS_INSTALL_VAGRANT=1
 OS_INSTALL_PODMAN=1
 OS_INSTALL_DOCKER=
+OS_INSTALL_OPENSSH=1
 OS_ENABLE_MULTILIB=1
 OS_THEME="adapta-gtk-theme:Adapta:Adapta-Nokto-Eta"
 OS_ICONS="papirus-icon-theme:Papirus"
@@ -24,6 +25,8 @@ OS_ENABLE_GLOBAL_MEDIA=1
 OS_ENABLE_POON_REPO=1
 OS_DISABLE_AUDIT=1
 OS_SYSTEMD_RESOLVED=1
+OS_ENABLE_SSH_SERVER=1
+OS_PROVISION_SSH_KEYS="https://timschumi.me/ssh.keys"
 
 _OS_NEEDS_XORG="${OS_INSTALL_LIGHTDM}"
 
@@ -83,6 +86,22 @@ fi  # OS_ENABLE_POON_REPO
 
 >&2 echo "--- Updating system ---"
 sudo pacman -Syyuu --noconfirm
+
+
+if [ -n "${OS_INSTALL_OPENSSH}" ]; then
+>&2 echo "--- Installing openssh ---"
+pacman-install openssh
+
+if [ -n "${OS_PROVISION_SSH_KEYS}" ]; then
+    mkdir -p "${HOME}/.ssh"
+    curl "${OS_PROVISION_SSH_KEYS}" > "${HOME}/.ssh/authorized_keys"
+fi
+
+if [ -n "${OS_ENABLE_SSH_SERVER}" ]; then
+    sudo systemctl enable sshd --now
+fi
+fi  # OS_INSTALL_OPENSSH
+
 
 
 if [[ "${OS_INSTALL_MICROCODE}" =~ intel|amd ]]; then
