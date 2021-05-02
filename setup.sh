@@ -94,7 +94,7 @@ if ! grep -q "dkp" /etc/pacman.conf; then
 sudo pacman-key --recv BC26F752D25B92CE272E0F44F7FD5492264BB9D0 --keyserver keyserver.ubuntu.com
 sudo pacman-key --lsign BC26F752D25B92CE272E0F44F7FD5492264BB9D0
 
-sudo pacman -U https://pkg.devkitpro.org/devkitpro-keyring.pkg.tar.xz
+sudo pacman -U https://pkg.devkitpro.org/devkitpro-keyring.pkg.tar.xz --noconfirm --needed --noprogressbar
 
 sudo tee -a /etc/pacman.conf << 'EOF' > /dev/null
 [dkp-libs]
