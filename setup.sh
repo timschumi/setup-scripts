@@ -298,6 +298,7 @@ if [ ! -f "/usr/libexec/qemu-kvm" ]; then
 qemu-system-x86_64 -enable-kvm "$@"
 EOF
     sudo chmod a+x /usr/libexec/qemu-kvm
+fi
 fi  # OS_INSTALL_LIBVIRT
 
 
