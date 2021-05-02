@@ -274,6 +274,9 @@ fi  # OS_ENABLE_GLOBAL_MEDIA
 
 if [ -n "${OS_INSTALL_LIBVIRT}" ]; then
 >&2 echo "--- Setting up libvirt ---"
+# iptables-nft replaces iptables
+sudo pacman -Rdd iptables --noconfirm --noprogressbar
+
 pacman-install \
     libvirt \
     qemu \
