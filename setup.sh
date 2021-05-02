@@ -69,6 +69,7 @@ sudo sed -i '/^\[multilib\]/!b;n;cInclude = /etc/pacman.d/mirrorlist' /etc/pacma
 fi
 
 if [ -n "${OS_ENABLE_POON_REPO}" ]; then
+if ! grep -q "thepoon" /etc/pacman.conf; then
 >&2 echo "--- Add ThePooN's repo ---"
 sudo pacman-key --keyserver hkp://hkps.pool.sks-keyservers.net -r C0E7D0CDB72FBE95
 sudo pacman-key --keyserver hkp://hkps.pool.sks-keyservers.net --lsign-key C0E7D0CDB72FBE95
@@ -77,6 +78,7 @@ sudo tee -a /etc/pacman.conf << 'EOF' > /dev/null
 Server = https://archrepo.thepoon.fr
 Server = https://mirrors.celianvdb.fr/archlinux/thepoon
 EOF
+fi
 fi  # OS_ENABLE_POON_REPO
 
 >&2 echo "--- Updating system ---"
