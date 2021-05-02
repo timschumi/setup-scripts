@@ -53,6 +53,7 @@ pacman-install() {
     sudo pacman -S "$@" --noconfirm --needed --noprogressbar --quiet
 }
 
+
 >&2 echo "--- Disabling sudo password requirement ---"
 echo "%wheel ALL=(ALL) NOPASSWD: ALL" | sudo tee /etc/sudoers.d/15-nopasswd
 
@@ -72,11 +73,12 @@ sudo sed -i 's/^#\[multilib\]/[multilib]/' /etc/pacman.conf
 sudo sed -i '/^\[multilib\]/!b;n;cInclude = /etc/pacman.d/mirrorlist' /etc/pacman.conf
 fi
 
+
 if [ -n "${OS_ENABLE_POON_REPO}" ]; then
 if ! grep -q "thepoon" /etc/pacman.conf; then
 >&2 echo "--- Add ThePooN's repo ---"
-sudo pacman-key --keyserver hkp://hkps.pool.sks-keyservers.net -r C0E7D0CDB72FBE95
-sudo pacman-key --keyserver hkp://hkps.pool.sks-keyservers.net --lsign-key C0E7D0CDB72FBE95
+sudo pacman-key --recv C0E7D0CDB72FBE95 --keyserver hkp://hkps.pool.sks-keyservers.net
+sudo pacman-key --lsign C0E7D0CDB72FBE95
 sudo tee -a /etc/pacman.conf << 'EOF' > /dev/null
 [thepoon]
 Server = https://archrepo.thepoon.fr
@@ -124,7 +126,6 @@ fi
 fi  # OS_INSTALL_OPENSSH
 
 
-
 if [[ "${OS_INSTALL_MICROCODE}" =~ intel|amd ]]; then
 >&2 echo "--- Installing ${OS_INSTALL_MICROCODE} microcode ---"
 pacman-install "${OS_INSTALL_MICROCODE}-ucode"
@@ -169,18 +170,18 @@ pacman-install xfce4 xfce4-goodies
 bash -c 'sleep 5 && xfce4-session-logout --logout' &
 startx /usr/bin/startxfce4
 
-xfconf-query -n -t string -c xfce4-panel -p /plugins/plugin-1 -s "whiskermenu"
-xfconf-query -n -t int -c xfce4-panel -p /panels -s 1 -a
-xfconf-query -n -t string -c xfce4-panel -p /panels/panel-1/position -s "p=8;x=0;y=0"
-xfconf-query -n -t int -c xfce4-panel -p /plugins/plugin-14/appearance -s "0"
-xfconf-query -n -t string -c xfce4-panel -p /plugins/plugin-14/items -s "+logout" -a
+xfconf-query -n -c xfce4-panel -p /plugins/plugin-1 -t string -s "whiskermenu"
+xfconf-query -n -c xfce4-panel -p /panels -t int -s 1 -a
+xfconf-query -n -c xfce4-panel -p /panels/panel-1/position -t string -s "p=8;x=0;y=0"
+xfconf-query -n -c xfce4-panel -p /plugins/plugin-14/appearance -t int -s "0"
+xfconf-query -n -c xfce4-panel -p /plugins/plugin-14/items -t string -s "+logout" -a
 
-xfconf-query -n -t bool -c xfce4-desktop -p /desktop-icons/file-icons/show-filesystem -s "false"
-xfconf-query -n -t bool -c xfce4-desktop -p /desktop-icons/file-icons/show-home -s "false"
-xfconf-query -n -t bool -c xfce4-desktop -p /desktop-icons/file-icons/show-removable -s "false"
-xfconf-query -n -t bool -c xfce4-desktop -p /desktop-icons/file-icons/show-trash -s "false"
+xfconf-query -n -c xfce4-desktop -p /desktop-icons/file-icons/show-filesystem -t bool -s "false"
+xfconf-query -n -c xfce4-desktop -p /desktop-icons/file-icons/show-home -t bool -s "false"
+xfconf-query -n -c xfce4-desktop -p /desktop-icons/file-icons/show-removable -t bool -s "false"
+xfconf-query -n -c xfce4-desktop -p /desktop-icons/file-icons/show-trash -t bool -s "false"
 
-xfconf-query -n -t bool -c keyboard-layout -p /Default/XkbDisable -s "true"
+xfconf-query -n -c keyboard-layout -p /Default/XkbDisable -t bool -s "true"
 fi  # OS_INSTALL_XFCE
 
 
@@ -196,8 +197,8 @@ if [ -n "${OS_THEME}" ]; then
 pacman-install "${_OS_THEME_PACKAGE}"
 
 if [ -n "${OS_INSTALL_XFCE}" ]; then
-xfconf-query -n -t string -c xsettings -p /Net/ThemeName -s "${_OS_THEME_NAME}"
-xfconf-query -n -t string -c xfce4-notifyd -p /theme -s "${_OS_THEME_GROUP}"
+xfconf-query -n -c xsettings -p /Net/ThemeName -t string -s "${_OS_THEME_NAME}"
+xfconf-query -n -c xfce4-notifyd -p /theme -t string -s "${_OS_THEME_GROUP}"
 fi  # OS_INSTALL_XFCE
 fi  # OS_THEME
 
@@ -207,7 +208,7 @@ if [ -n "${OS_ICONS}" ]; then
 pacman-install "${_OS_ICONS_PACKAGE}"
 
 if [ -n "${OS_INSTALL_XFCE}" ]; then
-xfconf-query -n -t string -c xsettings -p /Net/IconThemeName -s "${_OS_ICONS_NAME}"
+xfconf-query -n -c xsettings -p /Net/IconThemeName -t string -s "${_OS_ICONS_NAME}"
 fi  # OS_INSTALL_XFCE
 fi  # OS_ICONS
 
@@ -217,7 +218,7 @@ if [ -n "${OS_FONT}" ]; then
 pacman-install "${_OS_FONT_PACKAGE}"
 
 if [ -n "${OS_INSTALL_XFCE}" ]; then
-xfconf-query -n -t string -c xsettings -p /Gtk/FontName -s "${_OS_FONT_NAME}"
+xfconf-query -n -c xsettings -p /Gtk/FontName -t string -s "${_OS_FONT_NAME}"
 fi  # OS_INSTALL_XFCE
 fi  # OS_FONT
 
@@ -233,9 +234,9 @@ if [ -n "${OS_DISABLE_COMPOSITING}" ]; then
 >&2 echo "--- Disabling Compositing ---"
 
 if [ -n "${OS_INSTALL_XFCE}" ]; then
-xfconf-query -n -t bool -c xfwm4 -p /general/sync_to_vblank -s "false"
-xfconf-query -n -t string -c xfwm4 -p /general/vblank_mode -s "off"
-xfconf-query -n -t bool -c xfwm4 -p /general/use_compositing -s "false"
+xfconf-query -n -c xfwm4 -p /general/sync_to_vblank -t bool -s "false"
+xfconf-query -n -c xfwm4 -p /general/vblank_mode -t string -s "off"
+xfconf-query -n -c xfwm4 -p /general/use_compositing -t bool -s "false"
 fi  # OS_INSTALL_XFCE
 fi  # OS_DISABLE_COMPOSITING
 
