@@ -23,6 +23,7 @@ OS_DISABLE_COMPOSITING=1
 OS_ENABLE_LOWLATENCY_AUDIO=1
 OS_ENABLE_GLOBAL_MEDIA=1
 OS_ENABLE_POON_REPO=1
+OS_ENABLE_DKP_REPO=1
 OS_DISABLE_AUDIT=1
 OS_SYSTEMD_RESOLVED=1
 OS_ENABLE_SSH_SERVER=1
@@ -83,6 +84,26 @@ Server = https://mirrors.celianvdb.fr/archlinux/thepoon
 EOF
 fi
 fi  # OS_ENABLE_POON_REPO
+
+
+if [ -n "${OS_ENABLE_DKP_REPO}" ]; then
+if ! grep -q "dkp" /etc/pacman.conf; then
+>&2 echo "--- Add the DKP repo ---"
+sudo pacman-key --recv BC26F752D25B92CE272E0F44F7FD5492264BB9D0 --keyserver keyserver.ubuntu.com
+sudo pacman-key --lsign BC26F752D25B92CE272E0F44F7FD5492264BB9D0
+
+sudo pacman -U https://pkg.devkitpro.org/devkitpro-keyring.pkg.tar.xz
+
+sudo tee -a /etc/pacman.conf << 'EOF' > /dev/null
+[dkp-libs]
+Server = https://pkg.devkitpro.org/packages
+
+[dkp-linux]
+Server = https://pkg.devkitpro.org/packages/linux/$arch/
+EOF
+fi
+fi  # OS_ENABLE_DKP_REPO
+
 
 >&2 echo "--- Updating system ---"
 sudo pacman -Syyuu --noconfirm
