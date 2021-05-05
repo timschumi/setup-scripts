@@ -13,6 +13,7 @@ OS_INSTALL_VAGRANT=1
 OS_INSTALL_PODMAN=1
 OS_INSTALL_DOCKER=
 OS_INSTALL_OPENSSH=1
+OS_INSTALL_GIT=1
 OS_ENABLE_MULTILIB=1
 OS_THEME="adapta-gtk-theme:Adapta:Adapta-Nokto-Eta"
 OS_ICONS="papirus-icon-theme:Papirus"
@@ -30,6 +31,9 @@ OS_ENABLE_SSH_SERVER=1
 OS_PROVISION_SSH_KEYS="https://timschumi.me/ssh.keys"
 
 _OS_NEEDS_XORG="${OS_INSTALL_LIGHTDM}"
+
+# dotfiles requires git
+OS_INSTALL_GIT+="${OS_INSTALL_DOTFILES}"
 
 if [ -n "${OS_THEME}" ]; then
 _OS_THEME_SPLIT=(${OS_THEME//:/ })
@@ -221,6 +225,12 @@ if [ -n "${OS_INSTALL_XFCE}" ]; then
 xfconf-query -n -c xsettings -p /Gtk/FontName -t string -s "${_OS_FONT_NAME}"
 fi  # OS_INSTALL_XFCE
 fi  # OS_FONT
+
+
+if [ -n "${OS_INSTALL_GIT}" ]; then
+>&2 echo "--- Install git ---"
+pacman-install git
+fi
 
 
 if [ -n "${OS_INSTALL_DOTFILES}" ] && [ ! -d "$HOME/.dotfiles" ]; then
