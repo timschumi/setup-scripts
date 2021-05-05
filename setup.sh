@@ -327,6 +327,7 @@ pacman-install \
     bridge-utils \
     openbsd-netcat \
     virt-manager \
+    edk2-ovmf \
 
 sudo usermod -aG libvirt $USER
 sudo systemctl enable libvirtd --now
