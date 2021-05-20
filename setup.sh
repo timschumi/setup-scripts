@@ -1,5 +1,6 @@
 #!/bin/bash -e
 
+OS_INSTALL_XORG=1
 OS_INSTALL_LIGHTDM=1
 OS_INSTALL_XFCE=1
 OS_INSTALL_NETWORKMANAGER=1
@@ -30,7 +31,8 @@ OS_SYSTEMD_RESOLVED=1
 OS_ENABLE_SSH_SERVER=1
 OS_PROVISION_SSH_KEYS="https://timschumi.me/ssh.keys"
 
-_OS_NEEDS_XORG="${OS_INSTALL_LIGHTDM}"
+# lightdm requires xorg
+OS_INSTALL_XORG+="${OS_INSTALL_LIGHTDM}"
 
 # dotfiles requires git
 OS_INSTALL_GIT+="${OS_INSTALL_DOTFILES}"
@@ -144,10 +146,10 @@ exit 1
 fi  # OS_INSTALL_MICROCODE
 
 
-if [ -n "${_OS_NEEDS_XORG}" ]; then
+if [ -n "${OS_INSTALL_XORG}" ]; then
 >&2 echo "--- Installing Xorg ---"
 pacman-install xorg
-fi  # _OS_NEEDS_XORG
+fi  # OS_INSTALL_XORG
 
 
 if [ -n "${OS_INSTALL_PIPEWIRE}" ]; then
