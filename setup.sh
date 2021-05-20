@@ -156,10 +156,10 @@ fi  # OS_INSTALL_XORG
 
 if [ -n "${OS_INSTALL_PIPEWIRE}" ]; then
 >&2 echo "--- Installing PipeWire ---"
-pacman-install pipewire pipewire-pulse pipewire-alsa
+pacman-install pipewire pipewire-pulse pipewire-alsa pavucontrol
 elif [ -n "${OS_INSTALL_PULSEAUDIO}" ]; then  # OS_INSTALL_PIPEWIRE
 >&2 echo "--- Installing Pulseaudio ---"
-pacman-install pulseaudio
+pacman-install pulseaudio pavucontrol
 fi  # OS_INSTALL_PULSEAUDIO
 
 
