@@ -15,6 +15,7 @@ OS_INSTALL_PODMAN=1
 OS_INSTALL_DOCKER=
 OS_INSTALL_OPENSSH=1
 OS_INSTALL_GIT=1
+OS_INSTALL_GNOME_KEYRING=1
 OS_ENABLE_MULTILIB=1
 OS_THEME="adapta-gtk-theme:Adapta:Adapta-Nokto-Eta"
 OS_ICONS="papirus-icon-theme:Papirus"
@@ -401,6 +402,16 @@ if ! grep -q "audit" "${_OS_CURRENT_BOOT_FILE}"; then
     sudo sed -i "/^options.*/ s/$/ audit=0/" "${_OS_CURRENT_BOOT_FILE}"
 fi
 fi  # OS_DISABLE_AUDIT
+
+
+if [ -n "${OS_INSTALL_GNOME_KEYRING}" ]; then
+>&2 echo "--- Installing gnome-keyring ---"
+pacman-install gnome-keyring
+
+if [ -n "${OS_INSTALL_XFCE}" ]; then
+xfconf-query -n -c xfce4-session -p /compat/LaunchGNOME -t bool -s "true"
+fi  # OS_INSTALL_XFCE
+fi  # OS_INSTALL_GNOME_KEYRING
 
 
 >&2 echo "--- Enabling sudo password requirement ---"
