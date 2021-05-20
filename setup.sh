@@ -380,8 +380,8 @@ if [ -n "${OS_INSTALL_PODMAN}" ]; then
 >&2 echo "--- Installing podman ---"
 pacman-install podman buildah podman-compose
 
-echo "$USER:10000:65535" | sudo tee -a /etc/subuid
-echo "$USER:10000:65535" | sudo tee -a /etc/subgid
+echo "$USER:10000:65535" | sudo tee -a /etc/subuid > /dev/null
+echo "$USER:10000:65535" | sudo tee -a /etc/subgid > /dev/null
 fi  # OS_INSTALL_PODMAN
 
 
