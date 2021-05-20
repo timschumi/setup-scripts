@@ -18,6 +18,7 @@ OS_INSTALL_GIT=1
 OS_INSTALL_GNOME_KEYRING=1
 OS_INSTALL_STEAM=1
 OS_ENABLE_MULTILIB=1
+OS_LOCALES="de_DE.UTF-8:en_US.UTF-8:ja_JP.UTF-8"
 OS_THEME="adapta-gtk-theme:Adapta:Adapta-Nokto-Eta"
 OS_ICONS="papirus-icon-theme:Papirus"
 OS_FONT="noto-fonts:Noto Sans 10"
@@ -117,6 +118,29 @@ fi  # OS_ENABLE_DKP_REPO
 
 >&2 echo "--- Updating system ---"
 sudo pacman -Syyuu --noconfirm
+
+
+if [ -n "${OS_LOCALES}" ]; then
+>&2 echo "--- Setting up locales ---"
+_OS_LOCALES_SPLIT=(${OS_LOCALES//:/ })
+_OS_LOCALES_PRIMARY="${_OS_LOCALES_SPLIT[0]}"
+
+for loc in "${_OS_LOCALES_SPLIT}"; do
+    if grep -q "^${loc} " /etc/locale.gen; then
+        continue
+    fi
+
+    sudo sed -i "s/^#${loc} /${loc} /g" /etc/locale.gen
+done
+
+sudo locale-gen
+
+sudo localectl set-locale LANG=${_OS_LOCALES_PRIMARY}
+
+if [[ "${OS_LOCALES}" =~ *ja_JP* ]]; then
+    pacman-install noto-fonts-cjk
+fi  # OS_LOCALES =~ *ja_JP*
+fi  # OS_LOCALES
 
 
 if [ -n "${OS_INSTALL_OPENSSH}" ]; then
