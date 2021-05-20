@@ -171,6 +171,7 @@ if [ -n "${OS_INSTALL_XFCE}" ]; then
 pacman-install xfce4 xfce4-goodies
 
 # Generate XFCE files
+if [ ! -d "$HOME/.config/xfce4" ]; then
 bash -c 'sleep 5 && xfce4-session-logout --logout' &
 startx /usr/bin/startxfce4
 
@@ -186,6 +187,7 @@ xfconf-query -n -c xfce4-desktop -p /desktop-icons/file-icons/show-removable -t 
 xfconf-query -n -c xfce4-desktop -p /desktop-icons/file-icons/show-trash -t bool -s "false"
 
 xfconf-query -n -c keyboard-layout -p /Default/XkbDisable -t bool -s "true"
+fi  # ! -d ~/.config/xfce4
 fi  # OS_INSTALL_XFCE
 
 
