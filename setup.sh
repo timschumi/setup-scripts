@@ -16,6 +16,7 @@ OS_INSTALL_DOCKER=
 OS_INSTALL_OPENSSH=1
 OS_INSTALL_GIT=1
 OS_INSTALL_GNOME_KEYRING=1
+OS_INSTALL_STEAM=1
 OS_ENABLE_MULTILIB=1
 OS_THEME="adapta-gtk-theme:Adapta:Adapta-Nokto-Eta"
 OS_ICONS="papirus-icon-theme:Papirus"
@@ -412,6 +413,12 @@ if [ -n "${OS_INSTALL_XFCE}" ]; then
 xfconf-query -n -c xfce4-session -p /compat/LaunchGNOME -t bool -s "true"
 fi  # OS_INSTALL_XFCE
 fi  # OS_INSTALL_GNOME_KEYRING
+
+
+if [ -n "${OS_INSTALL_STEAM}" ]; then
+>&2 echo "--- Installing steam ---"
+pacman-install steam steam-native-runtime
+fi  # OS_INSTALL_STEAM
 
 
 >&2 echo "--- Enabling sudo password requirement ---"
