@@ -463,7 +463,7 @@ fi  # OS_INSTALL_STEAM
 
 if [ -n "${OS_INSTALL_FCITX}" ]; then
 >&2 echo "--- Installing fcitx ---"
-pacman-install fcitx fcitx-im
+pacman-install fcitx fcitx-im fcitx-configtool
 
 cat << 'EOF' > "${HOME}/.pam_environment"
 GTK_IM_MODULE DEFAULT=fcitx
