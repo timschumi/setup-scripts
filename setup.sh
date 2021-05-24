@@ -471,7 +471,7 @@ QT_IM_MODULE  DEFAULT=fcitx
 XMODIFIERS    DEFAULT=\@im=fcitx
 EOF
 
-if [[ "${OS_LOCALES}" =~ *ja_JP* ]]; then
+if [[ "${OS_LOCALES}" =~ ja_JP ]]; then
     pacman-install fcitx-mozc
 fi  # OS_LOCALES =~ *ja_JP*
 fi  # OS_INSTALL_FCITX
