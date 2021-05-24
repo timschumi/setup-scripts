@@ -23,6 +23,7 @@ OS_LOCALES="de_DE.UTF-8:en_US.UTF-8:ja_JP.UTF-8"
 OS_THEME="adapta-gtk-theme:Adapta:Adapta-Nokto-Eta"
 OS_ICONS="papirus-icon-theme:Papirus"
 OS_FONT="noto-fonts:Noto Sans 10"
+OS_FONT_MONO="ttf-dejavu:DejaVu Sans Mono 10"
 OS_KEYBOARD_LAYOUT="de-latin1-nodeadkeys"
 OS_INSTALL_DOTFILES=1
 OS_DISABLE_COMPOSITING=1
@@ -57,6 +58,10 @@ fi  # OS_ICONS
 if [ -n "${OS_FONT}" ]; then
 IFS=':' read -r _OS_FONT_PACKAGE _OS_FONT_NAME <<< "${OS_FONT}"
 fi  # OS_FONT
+
+if [ -n "${OS_FONT_MONO}" ]; then
+IFS=':' read -r _OS_FONT_MONO_PACKAGE _OS_FONT_MONO_NAME <<< "${OS_FONT_MONO}"
+fi  # OS_FONT_MONO
 
 
 pacman-install() {
@@ -256,6 +261,16 @@ if [ -n "${OS_INSTALL_XFCE}" ]; then
 xfconf-query -n -c xsettings -p /Gtk/FontName -t string -s "${_OS_FONT_NAME}"
 fi  # OS_INSTALL_XFCE
 fi  # OS_FONT
+
+
+if [ -n "${OS_FONT_MONO}" ]; then
+>&2 echo "--- Installing monospace font ---"
+pacman-install "${_OS_FONT_MONO_PACKAGE}"
+
+if [ -n "${OS_INSTALL_XFCE}" ]; then
+xfconf-query -n -c xsettings -p /Gtk/MonospaceFontName -t string -s "${_OS_FONT_MONO_NAME}"
+fi  # OS_INSTALL_XFCE
+fi  # OS_FONT_MONO
 
 
 if [ -n "${OS_INSTALL_GIT}" ]; then
