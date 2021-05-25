@@ -143,9 +143,9 @@ sudo locale-gen
 
 sudo localectl set-locale LANG=${_OS_LOCALES_PRIMARY}
 
-if [[ "${OS_LOCALES}" =~ *ja_JP* ]]; then
+if [[ "${OS_LOCALES}" =~ ja_JP ]]; then
     pacman-install noto-fonts-cjk
-fi  # OS_LOCALES =~ *ja_JP*
+fi  # OS_LOCALES =~ ja_JP
 fi  # OS_LOCALES
 
 
