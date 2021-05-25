@@ -3,6 +3,7 @@
 OS_INSTALL_XORG=1
 OS_INSTALL_LIGHTDM=1
 OS_INSTALL_XFCE=1
+OS_INSTALL_I3=1
 OS_INSTALL_NETWORKMANAGER=1
 OS_INSTALL_PIPEWIRE=1
 OS_INSTALL_PULSEAUDIO=
@@ -223,6 +224,22 @@ xfconf-query -n -c xfce4-desktop -p /desktop-icons/file-icons/show-trash -t bool
 xfconf-query -n -c keyboard-layout -p /Default/XkbDisable -t bool -s "true"
 fi  # ! -d ~/.config/xfce4
 fi  # OS_INSTALL_XFCE
+
+
+if [ -n "${OS_INSTALL_I3}" ]; then
+>&2 echo "--- Installing i3 ---"
+pacman-install i3-gaps i3blocks i3lock i3status dmenu
+
+if [ ! -f "$HOME/.config/i3/config" ]; then
+mkdir -p "$HOME/.config/i3"
+
+# Copy the default configuration file
+cp /etc/i3/config "$HOME/.config/i3/config"
+
+# Use Super as the default i3 key instead of Alt
+sed -i 's/Mod1/Mod4/g' "$HOME/.config/i3/config"
+fi  # ! -f ~/.config/i3/config
+fi  # OS_INSTALL_I3
 
 
 if [ -n "${OS_INSTALL_NETWORKMANAGER}" ]; then
