@@ -388,8 +388,10 @@ fi  # OS_ENABLE_GLOBAL_MEDIA
 
 if [ -n "${OS_INSTALL_LIBVIRT}" ]; then
 >&2 echo "--- Setting up libvirt ---"
-# iptables-nft replaces iptables
-sudo pacman -Rdd iptables --noconfirm --noprogressbar
+if pacman -Q -q | grep "^iptables$"; then
+    # iptables-nft replaces iptables
+    sudo pacman -Rdd iptables --noconfirm --noprogressbar
+fi  # pacman | grep ^iptables$
 
 pacman-install \
     libvirt \
