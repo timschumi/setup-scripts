@@ -132,7 +132,7 @@ if [ -n "${OS_LOCALES}" ]; then
 _OS_LOCALES_SPLIT=(${OS_LOCALES//:/ })
 _OS_LOCALES_PRIMARY="${_OS_LOCALES_SPLIT[0]}"
 
-for loc in "${_OS_LOCALES_SPLIT}"; do
+for loc in "${_OS_LOCALES_SPLIT[@]}"; do
     if grep -q "^${loc} " /etc/locale.gen; then
         continue
     fi
