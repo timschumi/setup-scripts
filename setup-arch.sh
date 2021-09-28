@@ -35,7 +35,7 @@ OS_ENABLE_DKP_REPO=1
 OS_DISABLE_AUDIT=1
 OS_SYSTEMD_RESOLVED=
 OS_ENABLE_SSH_SERVER=1
-OS_PROVISION_SSH_KEYS="https://timschumi.me/ssh.keys"
+OS_PROVISION_SSH_KEYS="https://timschumi.net/ssh.keys"
 
 # lightdm requires xorg
 OS_INSTALL_XORG+="${OS_INSTALL_LIGHTDM}"
