@@ -93,7 +93,7 @@ fi
 if [ -n "${OS_ENABLE_POON_REPO}" ]; then
 if ! grep -q "thepoon" /etc/pacman.conf; then
 >&2 echo "--- Add ThePooN's repo ---"
-sudo pacman-key --recv C0E7D0CDB72FBE95 --keyserver hkp://hkps.pool.sks-keyservers.net
+sudo pacman-key --recv C0E7D0CDB72FBE95 --keyserver keyserver.ubuntu.com
 sudo pacman-key --lsign C0E7D0CDB72FBE95
 sudo tee -a /etc/pacman.conf << 'EOF' > /dev/null
 [thepoon]
