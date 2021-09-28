@@ -168,10 +168,14 @@ fi  # OS_INSTALL_OPENSSH
 if [[ "${OS_INSTALL_MICROCODE}" =~ intel|amd ]]; then
 >&2 echo "--- Installing ${OS_INSTALL_MICROCODE} microcode ---"
 pacman-install "${OS_INSTALL_MICROCODE}-ucode"
+if [ -d "/sys/firmware/efi" ]; then
 _OS_CURRENT_BOOT_CONFIG=$(tr -d '\0\006' < /sys/firmware/efi/efivars/LoaderEntrySelected-4a67b082-0a4c-41cf-b6c7-440b29bb8c4f)
 _OS_CURRENT_BOOT_FILE="/boot/loader/entries/${_OS_CURRENT_BOOT_CONFIG}"
 if ! grep -q "ucode" "${_OS_CURRENT_BOOT_FILE}"; then
     sudo sed -i "/^linux.*/a initrd /${OS_INSTALL_MICROCODE}-ucode.img" "${_OS_CURRENT_BOOT_FILE}"
+fi
+else
+>&2 echo "Could not find bootloader config, not installing microcode."
 fi
 elif [ -n "${OS_INSTALL_MICROCODE}" ]; then
 >&2 echo "error: Unknown selection for OS_INSTALL_MICROCODE: '${OS_INSTALL_MICROCODE}'"
