@@ -460,10 +460,14 @@ fi  # OS_INSTALL_DOCKER
 
 
 if [ -n "${OS_DISABLE_AUDIT}" ]; then
+if [ -d "/sys/firmware/efi" ]; then
 _OS_CURRENT_BOOT_CONFIG=$(tr -d '\0\006' < /sys/firmware/efi/efivars/LoaderEntrySelected-4a67b082-0a4c-41cf-b6c7-440b29bb8c4f)
 _OS_CURRENT_BOOT_FILE="/boot/loader/entries/${_OS_CURRENT_BOOT_CONFIG}"
 if ! grep -q "audit" "${_OS_CURRENT_BOOT_FILE}"; then
     sudo sed -i "/^options.*/ s/$/ audit=0/" "${_OS_CURRENT_BOOT_FILE}"
+fi
+else
+>&2 echo "Could not find bootloader config, not disabling audit."
 fi
 fi  # OS_DISABLE_AUDIT
 
