@@ -6,6 +6,7 @@ OS_INSTALL_XFCE=1
 OS_INSTALL_I3=1
 OS_INSTALL_NETWORKMANAGER=1
 OS_INSTALL_PIPEWIRE=1
+OS_INSTALL_WIREPLUMBER=1
 OS_INSTALL_PULSEAUDIO=
 OS_INSTALL_MICROCODE=""
 OS_INSTALL_CUPS=1
@@ -192,6 +193,13 @@ fi  # OS_INSTALL_XORG
 if [ -n "${OS_INSTALL_PIPEWIRE}" ]; then
 >&2 echo "--- Installing PipeWire ---"
 pacman-install pipewire pipewire-pulse pipewire-alsa pavucontrol
+
+if [ -n "${OS_INSTALL_WIREPLUMBER}" ]; then
+    pacman-install wireplumber
+
+    sudo systemctl --global disable pipewire-media-session
+    sudo systemctl --global enable wireplumber
+fi  # OS_INSTALL_WIREPLUMBER
 elif [ -n "${OS_INSTALL_PULSEAUDIO}" ]; then  # OS_INSTALL_PIPEWIRE
 >&2 echo "--- Installing Pulseaudio ---"
 pacman-install pulseaudio pavucontrol
