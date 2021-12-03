@@ -241,7 +241,7 @@ fi  # OS_INSTALL_LIGHTDM
 
 if [ -n "${OS_INSTALL_XFCE}" ]; then
 >&2 echo "--- Installing XFCE ---"
-pacman-install xfce4 xfce4-goodies
+pacman-install xfce4 xfce4-goodies gvfs gvfs-smb
 
 # Generate XFCE files
 if [ ! -d "$HOME/.config/xfce4" ]; then
