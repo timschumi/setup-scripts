@@ -22,6 +22,7 @@ OS_INSTALL_GIT=1
 OS_INSTALL_GNOME_KEYRING=1
 OS_INSTALL_STEAM=
 OS_INSTALL_FCITX=
+OS_INSTALL_AURMAN=1
 OS_ENABLE_MULTILIB=1
 OS_LOCALES="de_DE.UTF-8:en_US.UTF-8:ja_JP.UTF-8"
 OS_THEME="adapta-gtk-theme:Adapta:Adapta-Nokto-Eta"
@@ -540,6 +541,13 @@ if [[ "${OS_LOCALES}" =~ ja_JP ]]; then
     pacman-install fcitx-mozc
 fi  # OS_LOCALES =~ *ja_JP*
 fi  # OS_INSTALL_FCITX
+
+
+if [ -n "${OS_INSTALL_AURMAN}" ]; then
+AURMAN_FILE_NAME="aurman-2.20.1-1-any.pkg.tar.zst"
+curl -o "/tmp/${AURMAN_FILE_NAME}" "https://dl.timschumi.net/${AURMAN_FILE_NAME}"
+sudo pacman -U "/tmp/${AURMAN_FILE_NAME}" --noconfirm --needed --noprogressbar
+fi  # OS_INSTALL_AURMAN
 
 
 if [ "${#OS_EXTRA_PACKAGES[@]}" -gt 0 ]; then
