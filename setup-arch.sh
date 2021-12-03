@@ -39,6 +39,7 @@ OS_DISABLE_AUDIT=1
 OS_SYSTEMD_RESOLVED=
 OS_ENABLE_SSH_SERVER=1
 OS_PROVISION_SSH_KEYS="https://timschumi.net/ssh.keys"
+OS_EXTRA_PACKAGES=("vim" "bash-completion")
 
 if [ "${_OS_HOSTNAME}" = "b450" ] || [ "${_OS_HOSTNAME}" = "p2520la" ]; then
 OS_INSTALL_CUPS=1
@@ -51,6 +52,7 @@ OS_DISABLE_COMPOSITING=1
 OS_ENABLE_LOWLATENCY_AUDIO=1
 OS_ENABLE_POON_REPO=1
 OS_ENABLE_DKP_REPO=1
+OS_EXTRA_PACKAGES+=("firefox")
 fi
 
 if [ "${_OS_HOSTNAME}" = "b450" ]; then
@@ -538,6 +540,12 @@ if [[ "${OS_LOCALES}" =~ ja_JP ]]; then
     pacman-install fcitx-mozc
 fi  # OS_LOCALES =~ *ja_JP*
 fi  # OS_INSTALL_FCITX
+
+
+if [ "${#OS_EXTRA_PACKAGES[@]}" -gt 0 ]; then
+>&2 echo "--- Installing extra packages ---"
+pacman-install "${OS_EXTRA_PACKAGES[@]}"
+fi
 
 
 >&2 echo "--- Enabling sudo password requirement ---"
