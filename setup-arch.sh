@@ -244,7 +244,7 @@ pacman-install xfce4 xfce4-goodies
 # Generate XFCE files
 if [ ! -d "$HOME/.config/xfce4" ]; then
 bash -c 'sleep 5 && xfce4-session-logout --logout' &
-startx /usr/bin/startxfce4
+startx /usr/bin/startxfce4 -- vt${XDG_VTNR}
 
 xfconf-query -n -c xfce4-panel -p /plugins/plugin-1 -t string -s "whiskermenu"
 xfconf-query -n -c xfce4-panel -p /panels -t int -s 1 -a
