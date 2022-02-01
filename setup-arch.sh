@@ -3,9 +3,11 @@
 _OS_HOSTNAME="$(cat /etc/hostname)"
 
 OS_INSTALL_XORG=1
+OS_INSTALL_WAYLAND=1
 OS_INSTALL_LIGHTDM=
 OS_INSTALL_GDM=1
 OS_INSTALL_XFCE=1
+OS_INSTALL_PLASMA=1
 OS_INSTALL_I3=
 OS_INSTALL_NETWORKMANAGER=1
 OS_INSTALL_PIPEWIRE=1
@@ -284,6 +286,16 @@ xfconf-query -n -c xfce4-desktop -p /desktop-icons/file-icons/show-trash -t bool
 xfconf-query -n -c keyboard-layout -p /Default/XkbDisable -t bool -s "true"
 fi  # ! -d ~/.config/xfce4
 fi  # OS_INSTALL_XFCE
+
+
+if [ -n "${OS_INSTALL_PLASMA}" ]; then
+>&2 echo "--- Installing Plasma ---"
+pacman-install plasma-desktop
+
+if [ -n "${OS_INSTALL_WAYLAND}" ]; then
+  pacman-install plasma-wayland-session
+fi  # OS_INSTALL_WAYLAND
+fi  # OS_INSTALL_PLASMA
 
 
 if [ -n "${OS_INSTALL_I3}" ]; then
