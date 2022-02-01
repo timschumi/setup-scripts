@@ -3,7 +3,8 @@
 _OS_HOSTNAME="$(cat /etc/hostname)"
 
 OS_INSTALL_XORG=1
-OS_INSTALL_LIGHTDM=1
+OS_INSTALL_LIGHTDM=
+OS_INSTALL_GDM=1
 OS_INSTALL_XFCE=1
 OS_INSTALL_I3=
 OS_INSTALL_NETWORKMANAGER=1
@@ -251,6 +252,13 @@ if [ -n "${OS_INSTALL_LIGHTDM}" ]; then
 pacman-install lightdm lightdm-gtk-greeter lightdm-gtk-greeter-settings
 sudo systemctl enable lightdm
 fi  # OS_INSTALL_LIGHTDM
+
+
+if [ -n "${OS_INSTALL_GDM}" ]; then
+>&2 echo "--- Installing gdm ---"
+pacman-install gdm
+sudo systemctl enable gdm
+fi  # OS_INSTALL_GDM
 
 
 if [ -n "${OS_INSTALL_XFCE}" ]; then
