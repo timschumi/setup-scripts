@@ -155,6 +155,14 @@ fi  # OS_ENABLE_DKP_REPO
 sudo pacman -Syyuu --noconfirm
 
 
+if grep -q "^flags.*hypervisor" /proc/cpuinfo; then
+pacman-install dmidecode
+if [ "$(sudo dmidecode -s system-manufacturer)" = "QEMU" ]; then
+  _OS_IS_QEMU=1
+fi  # QEMU
+fi  # ^flags.*hypervisor
+
+
 if [ -n "${OS_LOCALES}" ]; then
 >&2 echo "--- Setting up locales ---"
 _OS_LOCALES_SPLIT=(${OS_LOCALES//:/ })
@@ -214,6 +222,11 @@ fi  # OS_INSTALL_MICROCODE
 if [ -n "${OS_INSTALL_XORG}" ]; then
 >&2 echo "--- Installing Xorg ---"
 pacman-install xorg
+
+if [ -n "${_OS_IS_QEMU}" ]; then
+  >&2 echo "--- Installing SPICE additions ---"
+  pacman-install spice-vdagent xf86-video-qxl
+fi  # _OS_IS_QEMU
 fi  # OS_INSTALL_XORG
 
 
