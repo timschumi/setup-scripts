@@ -225,7 +225,7 @@ pacman-install xorg
 
 if [ -n "${_OS_IS_QEMU}" ]; then
   >&2 echo "--- Installing SPICE additions ---"
-  pacman-install spice-vdagent xf86-video-qxl
+  pacman-install spice-vdagent
 fi  # _OS_IS_QEMU
 fi  # OS_INSTALL_XORG
 
