@@ -37,7 +37,6 @@ OS_INSTALL_DOTFILES=1
 OS_DISABLE_COMPOSITING=1
 OS_ENABLE_LOWLATENCY_AUDIO=
 OS_ENABLE_GLOBAL_MEDIA=1
-OS_ENABLE_POON_REPO=
 OS_ENABLE_DKP_REPO=
 OS_DISABLE_AUDIT=1
 OS_SYSTEMD_RESOLVED=
@@ -54,7 +53,6 @@ OS_INSTALL_STEAM=1
 OS_INSTALL_FCITX=1
 OS_DISABLE_COMPOSITING=1
 OS_ENABLE_LOWLATENCY_AUDIO=1
-OS_ENABLE_POON_REPO=1
 OS_ENABLE_DKP_REPO=1
 OS_EXTRA_PACKAGES+=("firefox")
 fi
@@ -119,20 +117,6 @@ if [ -n "${OS_ENABLE_MULTILIB}" ]; then
 sudo sed -i 's/^#\[multilib\]/[multilib]/' /etc/pacman.conf
 sudo sed -i '/^\[multilib\]/!b;n;cInclude = /etc/pacman.d/mirrorlist' /etc/pacman.conf
 fi
-
-
-if [ -n "${OS_ENABLE_POON_REPO}" ]; then
-if ! grep -q "thepoon" /etc/pacman.conf; then
->&2 echo "--- Add ThePooN's repo ---"
-sudo pacman-key --recv C0E7D0CDB72FBE95 --keyserver keyserver.ubuntu.com
-sudo pacman-key --lsign C0E7D0CDB72FBE95
-sudo tee -a /etc/pacman.conf << 'EOF' > /dev/null
-[thepoon]
-Server = https://archrepo.thepoon.fr
-Server = https://mirrors.celianvdb.fr/archlinux/thepoon
-EOF
-fi
-fi  # OS_ENABLE_POON_REPO
 
 
 if [ -n "${OS_ENABLE_DKP_REPO}" ]; then
