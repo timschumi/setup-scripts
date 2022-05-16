@@ -451,8 +451,7 @@ fi  # pacman | grep ^iptables$
 
 pacman-install \
     libvirt \
-    qemu \
-    qemu-arch-extra \
+    qemu-full \
     iptables-nft \
     dnsmasq \
     bridge-utils \
