@@ -560,7 +560,7 @@ fi  # OS_INSTALL_FCITX
 
 
 if [ -n "${OS_INSTALL_AURMAN}" ]; then
-AURMAN_FILE_NAME="aurman-2.20.1-1-any.pkg.tar.zst"
+AURMAN_FILE_NAME="aurman-2.20.1-2-any.pkg.tar.zst"
 curl -o "/tmp/${AURMAN_FILE_NAME}" "https://dl.timschumi.net/${AURMAN_FILE_NAME}"
 sudo pacman -U "/tmp/${AURMAN_FILE_NAME}" --noconfirm --needed --noprogressbar
 fi  # OS_INSTALL_AURMAN
