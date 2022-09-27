@@ -44,7 +44,7 @@ OS_ENABLE_SSH_SERVER=1
 OS_PROVISION_SSH_KEYS="https://timschumi.net/ssh.keys"
 OS_EXTRA_PACKAGES=("vim" "bash-completion")
 
-if [ "${_OS_HOSTNAME}" = "b450" ] || [ "${_OS_HOSTNAME}" = "p2520la" ]; then
+if [ "${_OS_HOSTNAME}" = "b450" ] || [ "${_OS_HOSTNAME}" = "p2520la" ] || [ "${_OS_HOSTNAME}" = "framework" ]; then
 OS_INSTALL_CUPS=1
 OS_INSTALL_LIBVIRT=1
 OS_INSTALL_VAGRANT=1
@@ -61,7 +61,7 @@ if [ "${_OS_HOSTNAME}" = "b450" ]; then
 OS_INSTALL_MICROCODE="amd"
 fi
 
-if [ "${_OS_HOSTNAME}" = "p2520la" ]; then
+if [ "${_OS_HOSTNAME}" = "p2520la" ] || [ "${_OS_HOSTNAME}" = "framework" ]; then
 OS_INSTALL_MICROCODE="intel"
 fi
 
