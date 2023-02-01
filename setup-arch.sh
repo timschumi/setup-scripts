@@ -1,4 +1,6 @@
-#!/bin/bash -e
+#!/bin/bash
+
+set -e
 
 _OS_HOSTNAME="$(cat /etc/hostname)"
 
