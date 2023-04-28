@@ -402,6 +402,7 @@ if [ -n "${OS_ENABLE_LOWLATENCY_AUDIO}" ]; then
 
 sudo usermod -aG audio $USER
 
+sudo mkdir -p /etc/security/limits.d
 sudo tee /etc/security/limits.d/15-audio.conf << 'EOF' > /dev/null
 @audio - nice -20
 @audio - rtprio 99
