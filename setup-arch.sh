@@ -44,7 +44,11 @@ OS_DISABLE_AUDIT=1
 OS_SYSTEMD_RESOLVED=
 OS_ENABLE_SSH_SERVER=1
 OS_PROVISION_SSH_KEYS="https://timschumi.net/ssh.keys"
-OS_EXTRA_PACKAGES=("vim" "bash-completion")
+OS_EXTRA_PACKAGES=(
+    "bash-completion"
+    "vim"
+    "xfce4-terminal"
+)
 
 if [ "${_OS_HOSTNAME}" = "b450" ] || [ "${_OS_HOSTNAME}" = "p2520la" ] || [ "${_OS_HOSTNAME}" = "framework" ]; then
 OS_INSTALL_CUPS=1
