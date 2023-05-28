@@ -197,7 +197,7 @@ fi  # OS_INSTALL_OPENSSH
 if [[ "${OS_INSTALL_MICROCODE}" =~ intel|amd ]]; then
 >&2 echo "--- Installing ${OS_INSTALL_MICROCODE} microcode ---"
 pacman-install "${OS_INSTALL_MICROCODE}-ucode"
-if [ -d "/sys/firmware/efi" ]; then
+if [ -f "/sys/firmware/efi/efivars/LoaderEntrySelected-4a67b082-0a4c-41cf-b6c7-440b29bb8c4f" ]; then
 _OS_CURRENT_BOOT_CONFIG=$(tr -d '\0\006' < /sys/firmware/efi/efivars/LoaderEntrySelected-4a67b082-0a4c-41cf-b6c7-440b29bb8c4f)
 _OS_CURRENT_BOOT_FILE="/boot/loader/entries/${_OS_CURRENT_BOOT_CONFIG}"
 if ! grep -q "ucode" "${_OS_CURRENT_BOOT_FILE}"; then
@@ -526,7 +526,7 @@ fi  # OS_INSTALL_DOCKER
 
 
 if [ -n "${OS_DISABLE_AUDIT}" ]; then
-if [ -d "/sys/firmware/efi" ]; then
+if [ -f "/sys/firmware/efi/efivars/LoaderEntrySelected-4a67b082-0a4c-41cf-b6c7-440b29bb8c4f" ]; then
 _OS_CURRENT_BOOT_CONFIG=$(tr -d '\0\006' < /sys/firmware/efi/efivars/LoaderEntrySelected-4a67b082-0a4c-41cf-b6c7-440b29bb8c4f)
 _OS_CURRENT_BOOT_FILE="/boot/loader/entries/${_OS_CURRENT_BOOT_CONFIG}"
 if ! grep -q "audit" "${_OS_CURRENT_BOOT_FILE}"; then
