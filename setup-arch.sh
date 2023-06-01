@@ -60,7 +60,12 @@ OS_INSTALL_FCITX=1
 OS_DISABLE_COMPOSITING=1
 OS_ENABLE_LOWLATENCY_AUDIO=1
 OS_ENABLE_DKP_REPO=1
-OS_EXTRA_PACKAGES+=("firefox")
+OS_EXTRA_PACKAGES+=(
+    "firefox"
+    "gvfs"
+    "gvfs-mtp"
+    "gvfs-smb"
+)
 fi
 
 if [ "${_OS_HOSTNAME}" = "b450" ]; then
@@ -255,7 +260,7 @@ fi  # OS_INSTALL_GDM
 
 if [ -n "${OS_INSTALL_XFCE}" ]; then
 >&2 echo "--- Installing XFCE ---"
-pacman-install xfce4 xfce4-goodies gvfs gvfs-smb
+pacman-install xfce4 xfce4-goodies
 
 # Generate XFCE files
 if [ ! -d "$HOME/.config/xfce4" ]; then
