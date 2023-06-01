@@ -285,7 +285,7 @@ fi  # OS_INSTALL_XFCE
 
 if [ -n "${OS_INSTALL_PLASMA}" ]; then
 >&2 echo "--- Installing Plasma ---"
-pacman-install plasma-desktop kscreen plasma-workspace-wallpapers
+pacman-install plasma-desktop kscreen plasma-workspace-wallpapers breeze-gtk kde-gtk-config
 
 if [ -n "${OS_INSTALL_WAYLAND}" ]; then
   pacman-install plasma-wayland-session
