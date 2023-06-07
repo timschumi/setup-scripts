@@ -39,6 +39,7 @@ OS_INSTALL_DOTFILES=1
 OS_DISABLE_COMPOSITING=1
 OS_ENABLE_LOWLATENCY_AUDIO=
 OS_ENABLE_GLOBAL_MEDIA=1
+OS_ENABLE_DKP_REPO=
 OS_DISABLE_AUDIT=1
 OS_SYSTEMD_RESOLVED=
 OS_ENABLE_SSH_SERVER=1
@@ -58,6 +59,7 @@ OS_INSTALL_STEAM=1
 OS_INSTALL_FCITX=1
 OS_DISABLE_COMPOSITING=1
 OS_ENABLE_LOWLATENCY_AUDIO=1
+OS_ENABLE_DKP_REPO=1
 OS_EXTRA_PACKAGES+=(
     "firefox"
     "gvfs"
@@ -126,6 +128,25 @@ if [ -n "${OS_ENABLE_MULTILIB}" ]; then
 sudo sed -i 's/^#\[multilib\]/[multilib]/' /etc/pacman.conf
 sudo sed -i '/^\[multilib\]/!b;n;cInclude = /etc/pacman.d/mirrorlist' /etc/pacman.conf
 fi
+
+
+if [ -n "${OS_ENABLE_DKP_REPO}" ]; then
+if ! grep -q "dkp" /etc/pacman.conf; then
+>&2 echo "--- Add the DKP repo ---"
+sudo pacman-key --recv BC26F752D25B92CE272E0F44F7FD5492264BB9D0 --keyserver keyserver.ubuntu.com
+sudo pacman-key --lsign BC26F752D25B92CE272E0F44F7FD5492264BB9D0
+
+sudo pacman -U https://pkg.devkitpro.org/devkitpro-keyring.pkg.tar.xz --noconfirm --needed --noprogressbar
+
+sudo tee -a /etc/pacman.conf << 'EOF' > /dev/null
+[dkp-libs]
+Server = https://pkg.devkitpro.org/packages
+
+[dkp-linux]
+Server = https://pkg.devkitpro.org/packages/linux/$arch/
+EOF
+fi
+fi  # OS_ENABLE_DKP_REPO
 
 
 >&2 echo "--- Updating system ---"
