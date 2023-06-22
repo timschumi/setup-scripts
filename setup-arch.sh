@@ -489,6 +489,7 @@ pacman-install \
     virt-manager \
     edk2-ovmf \
 
+sudo usermod -aG kvm $USER
 sudo usermod -aG libvirt $USER
 sudo systemctl enable libvirtd --now
 sudo virsh net-autostart default
