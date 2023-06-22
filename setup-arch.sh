@@ -294,6 +294,13 @@ pacman-install \
     plasma-desktop \
     plasma-workspace-wallpapers \
 
+if [ -n "${OS_INSTALL_GDM}" ]; then
+sudo tee -a /etc/pam.d/gdm-password << 'EOF' > /dev/null
+auth       optional                    pam_kwallet5.so
+session    optional                    pam_kwallet5.so auto_start
+EOF
+fi  # OS_INSTALL_GDM
+
 if [ -n "${OS_INSTALL_WAYLAND}" ]; then
   pacman-install plasma-wayland-session
 fi  # OS_INSTALL_WAYLAND
